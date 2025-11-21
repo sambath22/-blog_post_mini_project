@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../assets/img/image.png" />
+    <title>Modern Login Form</title>
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #d99be23d, #976bff66);
+        padding: 20px;
+      }
+
+      .signup-container {
+        background-color: #fff;
+        display: flex;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        max-width: 900px;
+        width: 100%;
+      }
+
+      .signup-image {
+        flex: 1;
+        background: linear-gradient(180deg, #c084fc9a, #ec489ab7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        flex-direction: column;
+        padding: 40px;
+      }
+
+      .signup-image h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .signup-image p {
+        font-size: 1rem;
+        opacity: 0.9;
+        text-align: center;
+        max-width: 300px;
+      }
+
+      .signup-form {
+        flex: 1.2;
+        padding: 50px 40px;
+        background-color: #fff;
+      }
+
+      .signup-form h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #6d28d9;
+        font-weight: 600;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #374151;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 45px 12px 14px;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        background-color: #f9fafb;
+        font-size: 15px;
+        transition: 0.3s;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+      }
+
+      /* Eye Icon */
+      .form-group i {
+        position: absolute;
+        right: 14px;
+        top: 43px;
+        cursor: pointer;
+        font-size: 18px;
+        color: #9ca3af;
+      }
+
+      .btn {
+        width: 100%;
+        background: linear-gradient(135deg, #a855f7, #ec4899);
+        color: #fff;
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+      }
+
+      .btn:hover {
+        opacity: 0.9;
+      }
+
+      .register-link {
+        margin-top: 15px;
+        font-size: 14px;
+        text-align: center;
+      }
+
+      .register-link a {
+        color: #8b5cf6;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      #message {
+        text-align: center;
+        margin-top: 10px;
+        font-size: 14px;
+      }
+
+      @media (max-width: 850px) {
+        .signup-container {
+          flex-direction: column;
+        }
+        .signup-image {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="signup-container">
+      <div class="signup-image">
+        <h2>Welcome!</h2>
+        <p>Create your account and join our amazing community today.</p>
+      </div>
+
+      <div class="signup-form">
+        <h2>Login</h2>
+
+        <form>
+          <!-- EMAIL -->
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          <!-- PASSWORD with eye icon -->
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              required
+            />
+            <i id="togglePassword" class="bi bi-eye-slash"></i>
+          </div>
+
+          <button type="button" class="btn" onclick="login()">Login</button>
+
+          <p id="message"></p>
+
+          <div class="register-link">
+            Don't have an account?
+            <a href="register.html">Register here</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // 🔐 Show/Hide Password Toggle
+      const passwordInput = document.getElementById("password");
+      const togglePassword = document.getElementById("togglePassword");
+
+      togglePassword.addEventListener("click", () => {
+        const type =
+          passwordInput.getAttribute("type") === "password"
+            ? "text"
+            : "password";
+        passwordInput.setAttribute("type", type);
+
+        togglePassword.classList.toggle("bi-eye");
+        togglePassword.classList.toggle("bi-eye-slash");
+      });
+
+      // 🔐 Login Function
+      function login() {
+        let email = document.getElementById("email").value.trim();
+        let password = document.getElementById("password").value.trim();
+        let messageBox = document.getElementById("message");
+
+        // Frontend validation
+        if (!email) {
+          messageBox.style.color = "red";
+          messageBox.innerText = "❌ Please enter your email.";
+          return;
+        }
+
+        let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+          messageBox.style.color = "red";
+          messageBox.innerText = "❌ Invalid email format.";
+          return;
+        }
+
+        if (!password) {
+          messageBox.style.color = "red";
+          messageBox.innerText = "❌ Please enter your password.";
+          return;
+        }
+
+        if (password.length < 6) {
+          messageBox.style.color = "red";
+          messageBox.innerText = "❌ Password must be at least 6 characters.";
+          return;
+        }
+
+        // API Request
+        fetch("http://blogs.csm.linkpc.net/api/v1/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+
+            if (data && data.data && data.data.token) {
+              localStorage.setItem("token", data.data.token);
+
+              messageBox.style.color = "green";
+              messageBox.innerText = "✅ Login successful! Redirecting...";
+
+              setTimeout(() => {
+                location.href = "../index.html";
+              }, 1500);
+            } else {
+              messageBox.style.color = "red";
+              messageBox.innerText =
+                data.message || "❌ Invalid email or password.";
+            }
+          })
+          .catch(() => {
+            messageBox.style.color = "red";
+            messageBox.innerText = "⚠️ Something went wrong. Please try again.";
+          });
+      }
+    </script>
+  </body>
+</html>

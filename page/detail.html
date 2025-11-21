@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Article Detail</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background-color: #f3f4f6;
+        font-family: "Poppins", sans-serif;
+        color: #1f1f1f;
+      }
+
+      .container {
+        max-width: 850px;
+        margin-top: 70px;
+        margin-bottom: 80px;
+      }
+
+      .article-card {
+        background: #fff;
+        border-radius: 18px;
+        padding: 35px;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+      }
+
+      .article-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 14px;
+        margin-bottom: 25px;
+      }
+
+      .author-meta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .author-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .author-name {
+        font-weight: 600;
+        font-size: 1rem;
+      }
+
+      .publish-date {
+        color: #6b7280;
+        font-size: 0.9rem;
+      }
+
+      .article-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+      }
+
+      .article-content {
+        line-height: 1.8;
+        font-size: 1.08rem;
+        white-space: pre-line;
+      }
+
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        color: #374151;
+        margin-bottom: 30px;
+      }
+
+      .back-btn:hover {
+        color: #7c3aed;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <a href="../index.html" class="back-btn">← Back to Dashboard</a>
+
+      <div class="article-card" id="article">
+        <div class="text-center text-muted">Loading article...</div>
+      </div>
+    </div>
+
+    <script>
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "login.html";
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const articleId = params.get("id");
+
+      function formatDateTime(dateString) {
+        const d = new Date(dateString);
+        const day = String(d.getDate()).padStart(2, "0");
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const year = d.getFullYear();
+        const hour = String(d.getHours()).padStart(2, "0");
+        const minute = String(d.getMinutes()).padStart(2, "0");
+        const second = String(d.getSeconds()).padStart(2, "0");
+        return `${day}/${month}/${year} - ${hour}:${minute}:${second}`;
+      }
+
+      async function getArticle(id) {
+        const articleEl = document.getElementById("article");
+        try {
+          const res = await fetch(
+            `http://blogs.csm.linkpc.net/api/v1/articles/${id}`,
+            {
+              headers: { Authorization: "Bearer " + token },
+            }
+          );
+          if (!res.ok) throw new Error("Failed to load article");
+          const json = await res.json();
+          const data = json.data;
+
+          const imgSrc = data.thumbnail || "";
+
+          let contentText = "";
+          try {
+            const parsed = JSON.parse(data.content);
+            contentText = parsed.ops.map((op) => op.insert).join("");
+          } catch {
+            contentText = data.content;
+          }
+
+          articleEl.innerHTML = `
+            <img src="${imgSrc}" class="article-image">
+
+            <div class="author-meta">
+              <img
+                src="${data.creator?.avatar || ""}"
+                class="author-avatar"
+                alt="Author avatar"
+              />
+              <div>
+                <div class="author-name">
+                  ${data.creator?.firstName || ""} ${
+            data.creator?.lastName || ""
+          }
+                </div>
+                <div class="publish-date">
+                  Published on: ${formatDateTime(data.createdAt)}
+                </div>
+              </div>
+            </div>
+
+            <h1 class="article-title">${data.title}</h1>
+
+            <div class="article-content">${contentText}</div>
+          `;
+        } catch (err) {
+          articleEl.innerHTML = `<div class="text-danger">${err.message}</div>`;
+        }
+      }
+
+      getArticle(articleId);
+    </script>
+  </body>
+</html>

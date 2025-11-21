@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Articles</title>
+
+    <!-- Bootstrap & Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/category.css" />
+
+    <style>
+      .btn-create-article {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #6a5af9, #8b5cf6);
+        color: #fff;
+        padding: 10px 18px;
+        font-weight: 600;
+        border-radius: 10px;
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(140, 82, 255, 0.3);
+        transition: all 0.25s ease;
+      }
+
+      .btn-create-article:hover {
+        background: linear-gradient(135deg, #7b6dfd, #9a6ffc);
+        box-shadow: 0 6px 14px rgba(140, 82, 255, 0.4);
+        transform: translateY(-2px);
+        color: #fff;
+      }
+
+      .btn-create-article i {
+        font-size: 1.2rem;
+      }
+      .avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+      }
+
+      .profile-dropdown {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        background: #fff;
+        width: 180px;
+        border-radius: 10px;
+        padding: 10px 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: none;
+        z-index: 2000;
+      }
+      .profile-dropdown.show {
+        display: block;
+      }
+      .profile-dropdown .dropdown-item {
+        padding: 10px 15px;
+        display: block;
+        text-decoration: none;
+        font-size: 15px;
+      }
+
+      .modal-backdrop-custom {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        z-index: 3000;
+      }
+      .custom-modal {
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        width: 350px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 4000;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- DELETE MODAL -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger">
+              <i class="bi bi-exclamation-triangle"></i> Confirm Delete
+            </h5>
+            <button class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p class="fs-5">Are you sure you want to delete this article?</p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/img/image.png" alt="Logo" /> Blog Post
+      </div>
+      <ul class="menu-sidebar">
+        <li>
+          <a href="../index.html"><i class="bi bi-grid-fill"></i> Dashboard</a>
+        </li>
+        <li>
+          <details open>
+            <summary><i class="bi bi-file-text-fill"></i> My Articles</summary>
+            <ul>
+              <li><a href="own_article.html">All Articles</a></li>
+              <li>
+                <a href="create-article.html" class="menu-active"
+                  >Create Article</a
+                >
+              </li>
+            </ul>
+          </details>
+        </li>
+        <li>
+          <a href="categories.html"><i class="bi bi-tags-fill"></i> Category</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="profile-dropdown-container">
+          <div class="profile-trigger" onclick="toggleDropdown()">
+            <div class="me-2 text-end">
+              <div class="fw-semibold" id="welcomeMessage"></div>
+              <div class="email text-muted" id="email"></div>
+            </div>
+            <img id="avatar" class="avatar" src="" />
+          </div>
+          <div id="profileDropdown" class="profile-dropdown shadow">
+            <a href="../page/profile.html" class="dropdown-item"
+              ><i class="bi bi-person-circle me-2"></i> View Profile</a
+            >
+            <button
+              class="dropdown-item text-danger"
+              onclick="openLogoutModal()"
+            >
+              <i class="bi bi-box-arrow-right me-2"></i> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logout Modal -->
+      <div id="logoutModal" class="modal-backdrop-custom">
+        <div class="custom-modal text-center">
+          <h4 class="mb-3">Logout Confirmation</h4>
+          <p class="text-muted">Are you sure you want to logout?</p>
+          <div class="d-flex gap-3 mt-4">
+            <button class="btn btn-secondary w-50" onclick="closeLogoutModal()">
+              Cancel
+            </button>
+            <button class="btn btn-danger w-50" onclick="confirmLogout()">
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h3 class="m-0">My Articles</h3>
+          <a href="./create-article.html" class="btn-create-article"
+            ><i class="bi bi-plus-circle me-2"></i>Create New Article</a
+          >
+        </div>
+
+        <!-- Search -->
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <input
+              type="text"
+              id="searchInput"
+              class="form-control"
+              placeholder="Search by title..."
+            />
+          </div>
+        </div>
+
+        <table class="table table-bordered">
+          <thead class="bg-light">
+            <tr>
+              <th>Image</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Created At</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const token = localStorage.getItem("token");
+      if (!token) window.location.href = "login.html";
+
+      let deleteArticleId = null;
+      const deleteModal = new bootstrap.Modal(
+        document.getElementById("deleteModal")
+      );
+      const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+
+      // Profile Dropdown
+      function toggleDropdown() {
+        document.getElementById("profileDropdown").classList.toggle("show");
+      }
+      document.addEventListener("click", (e) => {
+        const dropdown = document.getElementById("profileDropdown");
+        const trigger = document.querySelector(".profile-trigger");
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.remove("show");
+        }
+      });
+
+      // Logout Modal
+      function openLogoutModal() {
+        document.getElementById("logoutModal").style.display = "block";
+      }
+      function closeLogoutModal() {
+        document.getElementById("logoutModal").style.display = "none";
+      }
+      function confirmLogout() {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+      }
+
+      // Load profile
+      fetch("http://blogs.csm.linkpc.net/api/v1/auth/profile", {
+        headers: { Authorization: "Bearer " + token },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const p = data.data;
+          document.getElementById(
+            "welcomeMessage"
+          ).innerText = `Welcome, ${p.firstName} ${p.lastName}`;
+          document.getElementById("email").innerText = p.email;
+          document.getElementById("avatar").src =
+            p.avatar || "https://via.placeholder.com/150";
+        });
+
+      // Load categories
+      let categoryMap = {};
+      async function loadCategories() {
+        const res = await fetch(
+          "http://blogs.csm.linkpc.net/api/v1/categories"
+        );
+        const data = await res.json();
+        data.data.items.forEach((cat) => {
+          categoryMap[cat.id] = cat.name;
+        });
+      }
+
+      // Load articles
+      let allArticles = [];
+      async function loadArticles() {
+        await loadCategories();
+        const res = await fetch(
+          "http://blogs.csm.linkpc.net/api/v1/articles/own?_per_page=100",
+          { headers: { Authorization: "Bearer " + token } }
+        );
+        const result = await res.json();
+        allArticles = result.data?.items || [];
+        displayArticles(allArticles);
+      }
+
+      // Display articles
+      function formatDateTime(dateString) {
+        const d = new Date(dateString);
+        const day = String(d.getDate()).padStart(2, "0");
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const year = d.getFullYear();
+        const hour = String(d.getHours()).padStart(2, "0");
+        const min = String(d.getMinutes()).padStart(2, "0");
+        const sec = String(d.getSeconds()).padStart(2, "0");
+        return `${day}/${month}/${year} - ${hour}:${min}:${sec}`;
+      }
+
+      function displayArticles(list) {
+        const tbody = document.getElementById("tbody");
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No articles found.</td></tr>`;
+          return;
+        }
+        let rows = "";
+        list.forEach((article) => {
+          const catName = article.category?.name || "N/A";
+          rows += `<tr>
+      <td><img src="${
+        article.thumbnail || "../assets/images/default.jpg"
+      }" width="70" height="70"></td>
+      <td>${article.title}</td>
+      <td>${catName}</td>
+      <td>${formatDateTime(article.createdAt)}</td>
+      <td>
+        <a href="edit-ariticle.html?id=${
+          article.id
+        }" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square"></i></a>
+        <button class="btn btn-sm btn-danger" onclick="openDeleteModal('${
+          article.id
+        }')"><i class="bi bi-trash3"></i></button>
+      </td>
+    </tr>`;
+        });
+        tbody.innerHTML = rows;
+      }
+
+      // Search
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", function () {
+          const text = this.value.toLowerCase();
+          const filtered = allArticles.filter((a) =>
+            a.title.toLowerCase().includes(text)
+          );
+          displayArticles(filtered);
+        });
+
+      // Delete article
+      function openDeleteModal(id) {
+        deleteArticleId = id;
+        deleteModal.show();
+      }
+      confirmDeleteBtn.addEventListener("click", () => {
+        if (!deleteArticleId) return;
+        fetch(
+          `http://blogs.csm.linkpc.net/api/v1/articles/${deleteArticleId}`,
+          { method: "DELETE", headers: { Authorization: "Bearer " + token } }
+        )
+          .then((res) => res.json())
+          .then(() => {
+            deleteModal.hide();
+            loadArticles();
+          });
+        deleteArticleId = null;
+      });
+
+      loadArticles();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Profile — Blog Post</title>
+
+    <!-- Bootstrap & Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+
+    <style>
+      :root {
+        --primary-1: linear-gradient(135deg, #c084fc, #f472b6);
+        --card-bg: #ffffff;
+        --muted: #6b7280;
+      }
+      * {
+        font-family: "Poppins", sans-serif;
+      }
+      body {
+        margin: 0;
+        display: flex;
+        background-color: #f5f5f5;
+        height: 100vh;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 230px;
+        background: linear-gradient(180deg, #c084fce1, #ec489adf);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+      }
+      .sidebar-header {
+        height: 62px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        font-size: 22px;
+        font-weight: 800;
+      }
+      .sidebar-header img {
+        width: 40px;
+        height: 40px;
+      }
+      .menu-sidebar a {
+        display: block;
+        color: #cbd5e1;
+        padding: 8px 6px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+      .menu-sidebar a:hover,
+      .menu-sidebar .menu-active {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+      }
+
+      /* Main Area */
+      .content-wrap {
+        width: 100%;
+        padding: 10px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #fff;
+        padding: 18px 22px;
+        box-shadow: 0 6px 20px rgba(7, 10, 21, 0.05);
+      }
+
+      .avatar-sm {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      /* Dropdown */
+      .profile-dropdown {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 10px);
+        width: 200px;
+        background: #fff;
+        border-radius: 10px;
+        display: none;
+        box-shadow: 0 10px 30px rgba(2, 6, 23, 0.1);
+      }
+      .profile-dropdown.show {
+        display: block;
+      }
+
+      /* Card */
+      .profile-card {
+        margin-top: 22px;
+        background: #fff;
+        padding: 34px;
+        border-radius: 18px;
+        max-width: 920px;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 0 12px 30px rgba(2, 6, 23, 0.05);
+      }
+
+      .profile-avatar {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 6px solid rgba(236, 72, 153, 0.2);
+        cursor: pointer;
+      }
+
+      .btn-save {
+        background: var(--primary-1);
+        color: #fff;
+        border-radius: 25px;
+        padding: 10px 20px;
+        border: none;
+      }
+
+      /* Toast */
+      .custom-toast {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 5000;
+        min-width: 260px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/img/image.png" />
+        <span>Blog Post</span>
+      </div>
+
+      <ul class="menu-sidebar">
+        <li>
+          <a href="../index.html"><i class="bi bi-grid-fill"></i> Dashboard</a>
+        </li>
+
+        <li>
+          <details open>
+            <summary><i class="bi bi-file-text-fill"></i> My Articles</summary>
+            <ul style="list-style: none; padding-left: 8px">
+              <li><a href="own_article.html">All Articles</a></li>
+              <li><a href="create-article.html">Create Article</a></li>
+            </ul>
+          </details>
+        </li>
+
+        <li>
+          <a href="categories.html"><i class="bi bi-tags-fill"></i> Category</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content-wrap">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div>
+          <h5 class="mb-0">Profile</h5>
+          <small class="text-muted">Manage your account details</small>
+        </div>
+
+        <div id="profileTrigger" class="d-flex align-items-center gap-2">
+          <div class="text-end">
+            <div id="topUserName" class="fw-bold">—</div>
+            <div id="topUserEmail" class="text-muted small">—</div>
+          </div>
+
+          <img
+            id="topbarAvatar"
+            class="avatar-sm"
+            src="https://via.placeholder.com/46"
+          />
+
+          <div id="profileDropdown" class="profile-dropdown">
+            <a href="../page/profile.html" class="dropdown-item p-2">
+              Profile
+            </a>
+            <button id="logoutBtnSmall" class="dropdown-item text-danger p-2">
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Card -->
+      <section class="profile-card">
+        <div class="text-center">
+          <img
+            id="profileAvatar"
+            class="profile-avatar mb-2"
+            src="https://via.placeholder.com/140"
+          />
+
+          <div class="small text-muted">Click avatar to change</div>
+
+          <input
+            id="avatarInput"
+            type="file"
+            accept="image/*"
+            style="display: none"
+          />
+
+          <!-- DELETE AVATAR BUTTON -->
+          <button
+            id="deleteAvatarBtn"
+            class="btn btn-outline-danger btn-sm mt-2"
+          >
+            🗑️ Delete Avatar
+          </button>
+        </div>
+
+        <form id="profileForm" class="mx-auto mt-4" style="max-width: 680px">
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label">First name</label>
+              <input id="firstName" class="form-control" />
+              <div id="firstNameError" class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Last name</label>
+              <input id="lastName" class="form-control" />
+              <div id="lastNameError" class="invalid-feedback"></div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input id="inputEmail" class="form-control" />
+            <div id="emailError" class="invalid-feedback"></div>
+          </div>
+
+          <button class="btn btn-save">💾 Save changes</button>
+        </form>
+      </section>
+    </main>
+
+    <!-- Logout Modal -->
+    <div class="modal fade" id="logoutModal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header"><h5>Confirm logout</h5></div>
+          <div class="modal-body">Are you sure?</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button id="confirmLogoutBtn" class="btn btn-danger">
+              Yes, logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="custom-toast">
+      <div id="successToast" class="toast text-bg-success">
+        <div class="d-flex">
+          <div id="successToastBody" class="toast-body">Saved</div>
+          <button
+            class="btn-close btn-close-white me-2"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      (function () {
+        const BASE_URL = "http://blogs.csm.linkpc.net/api/v1";
+        const token = localStorage.getItem("token");
+        if (!token) return (window.location.href = "login.html");
+
+        const topUserName = document.getElementById("topUserName");
+        const topUserEmail = document.getElementById("topUserEmail");
+        const topbarAvatar = document.getElementById("topbarAvatar");
+
+        const profileAvatar = document.getElementById("profileAvatar");
+        const avatarInput = document.getElementById("avatarInput");
+        const deleteAvatarBtn = document.getElementById("deleteAvatarBtn");
+
+        const firstNameEl = document.getElementById("firstName");
+        const lastNameEl = document.getElementById("lastName");
+        const emailEl = document.getElementById("inputEmail");
+
+        const successToastEl = document.getElementById("successToast");
+        const bsToast = new bootstrap.Toast(successToastEl);
+
+        let selectedAvatarFile = null;
+
+        /** Load Profile */
+        async function loadProfile() {
+          const res = await fetch(BASE_URL + "/auth/profile", {
+            headers: { Authorization: "Bearer " + token },
+          });
+          const json = await res.json();
+
+          const d = json.data;
+          const avatarUrl = d.avatar
+            ? d.avatar + "?t=" + Date.now()
+            : "https://via.placeholder.com/140";
+
+          firstNameEl.value = d.firstName || "";
+          lastNameEl.value = d.lastName || "";
+          emailEl.value = d.email || "";
+
+          topUserName.textContent = `${d.firstName} ${d.lastName}`;
+          topUserEmail.textContent = d.email;
+          profileAvatar.src = avatarUrl;
+          topbarAvatar.src = avatarUrl;
+        }
+
+        loadProfile();
+
+        /** Avatar Upload */
+        profileAvatar.onclick = () => avatarInput.click();
+        topbarAvatar.onclick = () => avatarInput.click();
+
+        avatarInput.onchange = (e) => {
+          const f = e.target.files[0];
+          if (!f) return;
+          selectedAvatarFile = f;
+          profileAvatar.src = URL.createObjectURL(f);
+          topbarAvatar.src = profileAvatar.src;
+        };
+
+        /** Delete Avatar */
+        deleteAvatarBtn.onclick = async () => {
+          if (!confirm("Delete your avatar?")) return;
+
+          const res = await fetch(BASE_URL + "/profile/avatar", {
+            method: "DELETE",
+            headers: { Authorization: "Bearer " + token },
+          });
+
+          const json = await res.json();
+          if (!res.ok) return alert(json.message);
+
+          const def = "https://via.placeholder.com/140";
+          profileAvatar.src = def;
+          topbarAvatar.src = def;
+
+          document.getElementById("successToastBody").textContent =
+            "Avatar deleted!";
+          bsToast.show();
+        };
+
+        /** Save Profile */
+        profileForm.onsubmit = async (e) => {
+          e.preventDefault();
+
+          const payload = {
+            firstName: firstNameEl.value.trim(),
+            lastName: lastNameEl.value.trim(),
+            email: emailEl.value.trim(),
+          };
+
+          const res = await fetch(BASE_URL + "/profile", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify(payload),
+          });
+
+          if (!res.ok) return alert("Failed to update.");
+
+          // Upload avatar if new
+          if (selectedAvatarFile) {
+            const fd = new FormData();
+            fd.append("avatar", selectedAvatarFile);
+
+            await fetch(BASE_URL + "/profile/avatar", {
+              method: "POST",
+              headers: { Authorization: "Bearer " + token },
+              body: fd,
+            });
+
+            selectedAvatarFile = null;
+          }
+
+          document.getElementById("successToastBody").textContent =
+            "Profile updated!";
+          bsToast.show();
+        };
+      })();
+    </script>
+  </body>
+</html>
